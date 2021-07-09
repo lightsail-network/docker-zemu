@@ -26,7 +26,7 @@ RUN apt-get update && \
 # Install Python
 RUN apt-get update && apt-get -y install python3 python3-pip
 RUN ln -s /usr/bin/python3 /usr/bin/python
-RUN pip3 install -U setuptools ledgerblue pillow
+RUN pip3 install -U setuptools ledgerblue pillow flask
 
 # Speculos dependencies
 RUN apt-get update && apt-get -y install qemu-user-static python3-pyqt5 python3-construct \
@@ -43,7 +43,7 @@ WORKDIR /home/zondax
 ####################################
 USER zondax
 
-# Speculos - use patched fork
+# Speculos
 RUN git clone -b master https://github.com/LedgerHQ/speculos.git
 RUN cd /home/zondax/speculos && git checkout 5b0b2c454fb7e952939f26bf425f42594821efdd
 RUN mkdir -p /home/zondax/speculos/build
@@ -73,7 +73,7 @@ EXPOSE 8001/udp
 # ENV
 ADD entrypoint.sh /home/zondax/entrypoint.sh
 
-RUN pip3 install -U jsonschema
+RUN pip3 install -U jsonschema pyelftools mnemonic construct flask flask-restful pillow requests
 
 # START SCRIPT
 ENTRYPOINT ["/home/zondax/entrypoint.sh"]
