@@ -45,7 +45,7 @@ USER zondax
 
 # Speculos
 RUN git clone -b master https://github.com/LedgerHQ/speculos.git
-RUN cd /home/zondax/speculos && git checkout 5b0b2c454fb7e952939f26bf425f42594821efdd
+RUN cd /home/zondax/speculos && git checkout c0311aef48412e40741a55f113939469da78e8e5
 RUN mkdir -p /home/zondax/speculos/build
 RUN cd /home/zondax/speculos && cmake -Bbuild -H. -DWITH_VNC=1
 RUN make -C /home/zondax/speculos/build/
@@ -69,6 +69,9 @@ EXPOSE 9998/udp
 # RFB
 EXPOSE 8001/tcp
 EXPOSE 8001/udp
+# API Speculos
+EXPOSE 5000/tcp
+EXPOSE 5000/udp
 
 # ENV
 ADD entrypoint.sh /home/zondax/entrypoint.sh
