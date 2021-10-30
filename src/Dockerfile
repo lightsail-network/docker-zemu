@@ -14,12 +14,14 @@
 #   limitations under the License.
 #*******************************************************************************
 #Download base ubuntu image
-FROM ubuntu:18.04
+FROM ubuntu:20.04
+ENV DEBIAN_FRONTEND noninteractive
+ENV LANG C.UTF-8
+
 RUN apt-get update && \
     apt-get -y install build-essential git wget sudo udev zip \
                        curl cmake software-properties-common
 
-RUN dpkg --add-architecture i386
 RUN apt-get update && \
     apt-get -y install libudev-dev libusb-1.0-0-dev 
 
@@ -32,7 +34,9 @@ RUN pip3 install -U setuptools ledgerblue pillow flask
 RUN apt-get update && apt-get -y install qemu-user-static python3-pyqt5 python3-construct \
                                  python3-mnemonic python3-pyelftools gcc-arm-linux-gnueabihf \
                                  libc6-dev-armhf-cross gdb-multiarch libvncserver-dev \
-                                 mesa-utils and libgl1-mesa-glx
+                                 mesa-utils libgl1-mesa-glx qemu-user-static 
+
+RUN pip3 install -U jsonschema pyelftools mnemonic construct flask flask-restful pillow requests
 
 # Create zondax user
 RUN adduser --disabled-password --gecos "" -u 1000 zondax
@@ -45,9 +49,9 @@ USER zondax
 
 # Speculos
 RUN git clone -b master https://github.com/LedgerHQ/speculos.git
-RUN cd /home/zondax/speculos && git checkout c0311aef48412e40741a55f113939469da78e8e5
+RUN cd /home/zondax/speculos && git checkout 4347de791b011c4bb0146547f6664b7f955917de
 RUN mkdir -p /home/zondax/speculos/build
-RUN cd /home/zondax/speculos && cmake -Bbuild -H. -DWITH_VNC=1
+RUN cd /home/zondax/speculos && cmake -Bbuild -H. -DWITH_VNC=0
 RUN make -C /home/zondax/speculos/build/
 
 # Patch proxy to connect to all interfaces
@@ -75,8 +79,6 @@ EXPOSE 5000/udp
 
 # ENV
 ADD entrypoint.sh /home/zondax/entrypoint.sh
-
-RUN pip3 install -U jsonschema pyelftools mnemonic construct flask flask-restful pillow requests
 
 # START SCRIPT
 ENTRYPOINT ["/home/zondax/entrypoint.sh"]
