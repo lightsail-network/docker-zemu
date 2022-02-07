@@ -48,9 +48,8 @@ WORKDIR /home/zondax
 USER zondax
 
 # Speculos
-RUN git clone -b master https://github.com/Zondax/speculos
-RUN cd /home/zondax/speculos && git checkout d7d74564f083edccb70e4222f1a86fb27c75042c
-RUN mkdir -p /home/zondax/speculos/build
+RUN git clone -b master https://github.com/LedgerHQ/speculos
+RUN cd speculos && git checkout b8178fe
 RUN cd /home/zondax/speculos && cmake -Bbuild -H. -DWITH_VNC=0
 RUN make -C /home/zondax/speculos/build/
 
