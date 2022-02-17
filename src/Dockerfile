@@ -1,5 +1,5 @@
 #*******************************************************************************
-#    (c) 2020 Zondax GmbH
+#    (c) 2020-2022 Zondax GmbH
 # 
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -20,23 +20,17 @@ ENV LANG C.UTF-8
 
 RUN apt-get update && \
     apt-get -y install build-essential git wget sudo udev zip \
-                       curl cmake software-properties-common
-
-RUN apt-get update && \
-    apt-get -y install libudev-dev libusb-1.0-0-dev 
-
-# Install Python
-RUN apt-get update && apt-get -y install python3 python3-pip
-RUN ln -s /usr/bin/python3 /usr/bin/python
-RUN pip3 install -U setuptools ledgerblue pillow flask
+                       curl cmake software-properties-common \
+                       python3 python3-pip python-is-python3 \
+                       libudev-dev libusb-1.0-0-dev 
 
 # Speculos dependencies
-RUN apt-get update && apt-get -y install qemu-user-static python3-pyqt5 python3-construct \
-                                 python3-mnemonic python3-pyelftools gcc-arm-linux-gnueabihf \
-                                 libc6-dev-armhf-cross gdb-multiarch libvncserver-dev \
-                                 mesa-utils libgl1-mesa-glx qemu-user-static 
+RUN apt-get update && \
+    apt-get -y install qemu-user-static python3-construct \
+                       python3-mnemonic python3-pyelftools gcc-arm-linux-gnueabihf \
+                       libc6-dev-armhf-cross gdb-multiarch
 
-RUN pip3 install -U jsonschema pyelftools mnemonic construct flask flask-restful pillow requests
+RUN pip3 install -U setuptools ledgerblue jsonschema pyelftools mnemonic construct flask flask-restful pillow requests
 
 # Create zondax user
 RUN adduser --disabled-password --gecos "" -u 1000 zondax
@@ -49,7 +43,7 @@ USER zondax
 
 # Speculos
 RUN git clone -b master https://github.com/LedgerHQ/speculos
-RUN cd speculos && git checkout b8178fe
+RUN cd speculos && git checkout master
 RUN cd /home/zondax/speculos && cmake -Bbuild -H. -DWITH_VNC=0
 RUN make -C /home/zondax/speculos/build/
 

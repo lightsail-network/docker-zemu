@@ -17,10 +17,14 @@ else
 HASH_TAG:=latest
 endif
 
-default: build
+UNAME_CPU := $(shell uname -p)
+PLATFORM := linux/amd64
+ifeq ($(UNAME_CPU),arm)
+	PLATFORM := linux/arm64
+endif # $(OS)
 
 build:
-	cd src && docker build --rm -f Dockerfile -t $(DOCKER_IMAGE):$(HASH_TAG) -t $(DOCKER_IMAGE):latest .
+	cd src && docker buildx build --platform $(PLATFORM) --rm -f Dockerfile -t $(DOCKER_IMAGE):$(HASH_TAG) -t $(DOCKER_IMAGE):latest .
 
 publish_login:
 	docker login
