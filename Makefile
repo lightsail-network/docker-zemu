@@ -17,24 +17,18 @@ else
 HASH_TAG:=latest
 endif
 
-UNAME_CPU := $(shell uname -p)
-PLATFORM := linux/amd64
-ifeq ($(UNAME_CPU),arm)
-	PLATFORM := linux/arm64
-endif # $(OS)
-
 build:
-	cd src && docker buildx build --platform $(PLATFORM) --rm -f Dockerfile -t $(DOCKER_IMAGE):$(HASH_TAG) -t $(DOCKER_IMAGE):latest .
+	docker buildx create --use
+#	cd src && docker buildx build --platform=linux/amd64,linux/arm64 --rm -f Dockerfile -t $(DOCKER_IMAGE):$(HASH_TAG) -t $(DOCKER_IMAGE):latest .
+	cd src && docker buildx build --platform=linux/amd64 --rm -f Dockerfile -t $(DOCKER_IMAGE):$(HASH_TAG) -t $(DOCKER_IMAGE):latest .
 
 publish_login:
 	docker login
-publish: build
+
+publish: build publish_login
+publish: publish
 	docker push $(DOCKER_IMAGE):latest
 	docker push $(DOCKER_IMAGE):$(HASH_TAG)
-
-publish: build
-publish: publish_login
-publish: publish
 
 push: publish
 
@@ -51,7 +45,6 @@ define run_docker
 	$(1) \
 	"$(2)"
 endef
-
 
 shell: build
 	$(call run_docker,$(DOCKER_IMAGE):$(HASH_TAG),/bin/bash)
