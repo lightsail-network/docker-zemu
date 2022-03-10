@@ -20,7 +20,7 @@ endif
 build:
 	docker buildx create --use
 #	cd src && docker buildx build --platform=linux/amd64,linux/arm64 --rm -f Dockerfile -t $(DOCKER_IMAGE):$(HASH_TAG) -t $(DOCKER_IMAGE):latest .
-	cd src && docker buildx build --platform=linux/amd64 --rm -f Dockerfile -t $(DOCKER_IMAGE):$(HASH_TAG) -t $(DOCKER_IMAGE):latest .
+	cd src && docker build --rm -f Dockerfile -t $(DOCKER_IMAGE):$(HASH_TAG) -t $(DOCKER_IMAGE):latest .
 
 publish_login:
 	docker login
