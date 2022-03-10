@@ -1,12 +1,12 @@
 #*******************************************************************************
 #    (c) 2020-2022 Zondax GmbH
-# 
+#
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
 #   You may obtain a copy of the License at
-# 
+#
 #       http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 #   Unless required by applicable law or agreed to in writing, software
 #   distributed under the License is distributed on an "AS IS" BASIS,
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,7 +22,7 @@ RUN apt-get update && \
     apt-get -y install build-essential git wget sudo udev zip \
                        curl cmake software-properties-common \
                        python3 python3-pip python-is-python3 \
-                       libudev-dev libusb-1.0-0-dev 
+                       libudev-dev libusb-1.0-0-dev
 
 # Speculos dependencies
 RUN apt-get update && \
@@ -42,8 +42,11 @@ WORKDIR /home/zondax
 USER zondax
 
 # Speculos
-RUN git clone -b master https://github.com/LedgerHQ/speculos
-RUN cd speculos && git checkout master
+# RUN git clone -b master https://github.com/LedgerHQ/speculos
+# RUN cd speculos && git checkout master
+#Temporal url for Nanos+ support
+RUN git clone -b lns+-sdk-1.0-support https://github.com/cbouvet-ledger/speculos.git
+
 RUN cd /home/zondax/speculos && cmake -Bbuild -H. -DWITH_VNC=0
 RUN make -C /home/zondax/speculos/build/
 
