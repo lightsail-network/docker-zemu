@@ -42,10 +42,7 @@ WORKDIR /home/zondax
 USER zondax
 
 # Speculos
-# RUN git clone -b master https://github.com/LedgerHQ/speculos
-# RUN cd speculos && git checkout master
-#Temporal url for Nanos+ support
-RUN git clone -b lns+-sdk-1.0-support https://github.com/cbouvet-ledger/speculos.git
+RUN git clone https://github.com/LedgerHQ/speculos --depth 1
 
 RUN cd /home/zondax/speculos && cmake -Bbuild -H. -DWITH_VNC=0
 RUN make -C /home/zondax/speculos/build/
