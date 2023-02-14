@@ -28,9 +28,10 @@ RUN apt-get update && \
 RUN apt-get update && \
     apt-get -y install qemu-user-static python3-construct \
                        python3-mnemonic python3-pyelftools gcc-arm-linux-gnueabihf \
-                       libc6-dev-armhf-cross gdb-multiarch
+                       libc6-dev-armhf-cross gdb-multiarch \
+                       tesseract-ocr libtesseract-dev
 
-RUN pip3 install -U setuptools ledgerblue jsonschema pyelftools mnemonic construct flask flask-restful pillow requests
+RUN pip3 install -U setuptools ledgerblue jsonschema pyelftools mnemonic construct flask flask-restful pillow requests pytesseract
 
 # Create zondax user
 RUN adduser --disabled-password --gecos "" -u 1000 zondax
