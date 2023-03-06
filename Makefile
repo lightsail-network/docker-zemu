@@ -1,5 +1,4 @@
-DOCKER_IMAGE_PREFIX=zondax/builder-
-DOCKER_IMAGE=${DOCKER_IMAGE_PREFIX}zemu
+DOCKER_IMAGE=zondax/builder-zemu
 
 INTERACTIVE:=$(shell [ -t 0 ] && echo 1)
 
@@ -18,17 +17,11 @@ HASH_TAG:=latest
 endif
 
 build:
-	docker buildx create --use
-#	cd src && docker buildx build --platform=linux/amd64,linux/arm64 --rm -f Dockerfile -t $(DOCKER_IMAGE):$(HASH_TAG) -t $(DOCKER_IMAGE):latest .
-	cd src && docker build --rm -f Dockerfile -t $(DOCKER_IMAGE):$(HASH_TAG) -t $(DOCKER_IMAGE):latest .
+	cd src && docker buildx build --platform=linux/amd64,linux/arm64 -t $(DOCKER_IMAGE):$(HASH_TAG) -t $(DOCKER_IMAGE):latest .
 
-publish_login:
+publish:
 	docker login
-
-publish: build publish_login
-publish: publish
-	docker push $(DOCKER_IMAGE):latest
-	docker push $(DOCKER_IMAGE):$(HASH_TAG)
+	cd src && docker buildx build --platform=linux/amd64,linux/arm64 -t $(DOCKER_IMAGE):$(HASH_TAG) -t $(DOCKER_IMAGE):latest --push .
 
 push: publish
 
