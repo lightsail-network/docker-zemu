@@ -11,7 +11,9 @@ jobs:
         uses: actions/checkout@v3
       - name: Git commit hash
         id: hash
-        run: echo "hash=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+        run: |
+          echo "speculosHash=$(git ls-remote https://github.com/LedgerHQ/speculos | head -n 1 | awk '{print $1}')" >> $GITHUB_OUTPUT
+          echo "hash=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
       - name: Set up QEMU # to build multitarget containers
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
@@ -22,4 +24,7 @@ jobs:
           context: src
           platforms: linux/amd64,linux/arm64
           push: false
-          tags: zondax/builder-zemu:${{ steps.hash.outputs.hash }},zondax/builder-zemu:latest
+          tags: >-
+            zondax/builder-zemu:${{ steps.hash.outputs.hash }},
+            zondax/builder-zemu:latest,
+            zondax/builder-zemu:ledger-${{ steps.hash.outputs.speculosHash }}
