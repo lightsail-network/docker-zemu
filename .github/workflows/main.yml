@@ -27,4 +27,4 @@ jobs:
           tags: >-
             zondax/builder-zemu:${{ steps.hash.outputs.hash }},
             zondax/builder-zemu:latest,
-            zondax/builder-zemu:ledger-${{ steps.hash.outputs.speculosHash }}
+            zondax/builder-zemu:speculos-${{ steps.hash.outputs.speculosHash }}
