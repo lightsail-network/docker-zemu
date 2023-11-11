@@ -1,6 +1,6 @@
-name: Build
+name: Build and release
 on:
-  pull_request:
+  push:
   workflow_dispatch:
 
 jobs:
@@ -15,15 +15,15 @@ jobs:
           echo "speculosHash=$(git ls-remote https://github.com/LedgerHQ/speculos | head -n 1 | awk '{print $1}')" >> $GITHUB_OUTPUT
           echo "hash=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
       - name: Set up QEMU # to build multitarget containers
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
       - name: Build image
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
           context: src
           platforms: linux/amd64,linux/arm64
-          push: false
+          push: ${{ (github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main')) || github.event_name == 'workflow_dispatch' }}
           tags: >-
             zondax/builder-zemu:${{ steps.hash.outputs.hash }},
             zondax/builder-zemu:latest,

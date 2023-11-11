@@ -14,7 +14,7 @@
 #   limitations under the License.
 #*******************************************************************************
 
-FROM python:3-slim
+FROM python:3.9-slim
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV LANG C.UTF-8
@@ -22,11 +22,12 @@ ENV LANG C.UTF-8
 # Speculos build dependencies
 RUN apt-get update && \
   apt-get install -qy cmake curl gcc-arm-linux-gnueabihf \
-    git libc6-dev-armhf-cross libvncserver-dev qemu-user-static \
-    tesseract-ocr libtesseract-dev wget && \
+    git libc6-dev-armhf-cross libvncserver-dev python3-pip \
+    qemu-user-static tesseract-ocr libtesseract-dev wget \
+    gdb-multiarch binutils-arm-none-eabi && \
     apt-get clean && rm -rf /var/lib/apt/lists/
 
-RUN pip3 install ledgerblue construct flake8 flask flask_restful jsonschema mnemonic pycryptodome pyelftools pbkdf2 pytest Pillow requests pytesseract
+RUN pip3 install ledgerblue construct flake8 flask flask_restful jsonschema mnemonic pycrypto pyelftools pbkdf2 pytest Pillow requests
 
 # Create zondax user
 RUN adduser --disabled-password --gecos "" -u 1000 zondax
