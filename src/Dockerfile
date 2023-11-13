@@ -23,7 +23,7 @@ ENV LANG C.UTF-8
 RUN apt-get update && \
   apt-get install -qy cmake curl gcc-arm-linux-gnueabihf \
     git libc6-dev-armhf-cross libvncserver-dev python3-pip \
-    qemu-user-static tesseract-ocr libtesseract-dev wget \
+    qemu-user-static wget \
     gdb-multiarch binutils-arm-none-eabi && \
     apt-get clean && rm -rf /var/lib/apt/lists/
 
