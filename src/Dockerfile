@@ -41,6 +41,9 @@ RUN git clone https://github.com/LedgerHQ/speculos --depth 1
 RUN cd speculos && cmake -Bbuild -H. -DWITH_VNC=1
 RUN make -C speculos/build
 
+RUN pip install --upgrade pip pipenv
+RUN cd speculos && python -m pipenv install --deploy --system
+
 # Patch proxy to connect to all interfaces
 RUN sed -i "s/HOST = '127.0.0.1'/HOST = '0.0.0.0'/g" speculos/tools/ledger-live-http-proxy.py
 
