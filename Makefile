@@ -1,4 +1,4 @@
-DOCKER_IMAGE=zondax/builder-zemu
+DOCKER_IMAGE=lightsailnetwork/builder-zemu
 
 INTERACTIVE:=$(shell [ -t 0 ] && echo 1)
 
